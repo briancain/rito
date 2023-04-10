@@ -3,10 +3,10 @@ build: # Build the project
 	@go build -o bin/ ./...
 
 proto:
-	@protoc api/v1/*.proto \                                                                                                    ±[●][main]
-	--go_out=. \
-	--go_opt=paths=source_relative \
-	--proto_path=.
+	@protoc api/v1/*.proto \
+		--go_out=. \
+		--go_opt=paths=source_relative \
+		--proto_path=.
 
 
 .PHONY: test
