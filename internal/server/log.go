@@ -22,9 +22,20 @@ func NewLog() *Log {
 var ErrOffsetNotFound = fmt.Errorf("offset not found")
 
 func (c *Log) Append(record Record) (uint64, error) {
-	return 0, nil
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	record.Offset = uint64(len(c.records))
+	c.records = append(c.records, record)
+	return record.Offset, nil
 }
 
 func (c *Log) Read(offset uint64) (Record, error) {
-	return Record{}, nil
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if offset >= uint64(len(c.records)) {
+		return Record{}, ErrOffsetNotFound
+	}
+	return c.records[offset], nil
 }
