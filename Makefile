@@ -8,7 +8,6 @@ proto:
 		--go_opt=paths=source_relative \
 		--proto_path=.
 
-
 .PHONY: test
 test: # Build the project
 	@go test -v ./...
