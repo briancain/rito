@@ -1,6 +1,7 @@
 package log
 
 import (
+	"io"
 	"os"
 
 	"github.com/tysonmote/gommap"
@@ -16,6 +17,11 @@ type index struct {
 	file *os.File
 	mmap gommap.MMap
 	size uint64
+}
+
+// Name returns the index files name
+func (i *index) Name() string {
+	return i.file.Name()
 }
 
 func newIndex(f *os.File, c Config) (*index, error) {
@@ -43,6 +49,39 @@ func newIndex(f *os.File, c Config) (*index, error) {
 		return nil, err
 	}
 	return idx, nil
+}
+
+// Read takes an offset and returns the associated records positon in the store
+func (i *index) Read(in int64) (out uint32, pos uint64, err error) {
+	if i.size == 0 {
+		return 0, 0, io.EOF
+	}
+	if in == -1 {
+		out = uint32((i.size / entWidth) - 1)
+	} else {
+		out = uint32(in)
+	}
+
+	pos = uint64(out) * entWidth
+	if i.size < pos+entWidth {
+		return 0, 0, io.EOF
+	}
+	out = enc.Uint32(i.mmap[pos : pos+offWidth])
+	pos = enc.Uint64(i.mmap[pos+offWidth : pos+entWidth])
+	return out, pos, nil
+}
+
+// Write appends the given offset and position to the index
+func (i *index) Write(off uint32, pos uint64) error {
+	// Validate we have enough space to write the entry
+	if uint64(len(i.mmap)) < i.size+entWidth {
+		return io.EOF
+	}
+
+	enc.PutUint32(i.mmap[i.size:i.size+offWidth], off)
+	enc.PutUint64(i.mmap[i.size+offWidth:i.size+entWidth], pos)
+
+	return nil
 }
 
 // Close ensures the memory mapped file has synced its data to the persisted
