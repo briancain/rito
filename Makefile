@@ -1,4 +1,5 @@
 CONFIG_PATH=${HOME}/.rito/
+CONFIG_DIR=test/testcerts
 
 .PHONY: build
 build: # Build the project
