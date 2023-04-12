@@ -1,3 +1,3 @@
-# Distrubted Services with Go
+# Rito: A distribted commit log program
 
-A distrubted commit log program.
+Delivering your mail all across accross the Great Sea
