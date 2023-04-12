@@ -1,3 +1,5 @@
+CONFIG_PATH=${HOME}/.rito/
+
 .PHONY: build
 build: # Build the project
 	@go build -o bin/ ./...
@@ -15,13 +17,27 @@ proto: # Generates the protobufs
 test: # Build the project
 	@go test -v ./...
 
-.PHONY: run
-run: # Build the project
-	./bin/waypoint-station
-
 .PHONY: format
 format: # Format all go code in project
 	@gofmt -s -w ./
+
+# Cert gen
+
+.PHONY: init
+init: # Initializes the cert config path for Rito
+	mkdir -p ${CONFIG_PATH}
+
+.PHONY: gencert
+gencert: # Generates ssl certs for Rito server
+	cfssl gencert \
+		-initca test/ca-csr.json | cfssljson -bare ca
+	cfssl gencert \
+		-ca=ca.pem \
+		-ca-key=ca-key.pem \
+		-config=test/ca-config.json \
+		-profile=server \
+		test/server-csr.json | cfssljson -bare server
+	mv *pem *.csr ${CONFIG_PATH}
 
 .PHONY: help
 help: # Print valid Make targets
