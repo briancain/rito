@@ -35,10 +35,8 @@ jobs:
 
     - name: Setup Tests
       run: |
-        go install github.com/cloudflare/cfssl/cmd/cfssl@v1.4.1
-        go install github.com/cloudflare/cfssl/cmd/cfssljson@v1.4.1
         make init
-        make gencert
+        cp test/testcerts/* ~/.rito/
 
     - name: Test # Simple syntax checker
       run: make test
