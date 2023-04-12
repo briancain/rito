@@ -2,7 +2,8 @@
 build: # Build the project
 	@go build -o bin/ ./...
 
-proto:
+.PHONY: proto
+proto: # Generates the protobufs
 	@protoc api/v1/*.proto \
 		--go_out=. \
 		--go-grpc_out=. \
