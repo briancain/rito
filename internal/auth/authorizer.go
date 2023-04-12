@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/casbin/casbin"
-	"github.com/gogo/status"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type Authorizer struct {
