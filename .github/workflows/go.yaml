@@ -31,12 +31,12 @@ jobs:
         git diff --exit-code -- go.mod go.sum
 
     - name: Build # Simple syntax checker
-      run: go build -v ./...
+      run: make build
 
     - name: Setup Tests
       run: |
         make init
         cp test/testcerts/* ~/.rito/
 
-    - name: Test # Simple syntax checker
+    - name: Test # Run the golang tests!
       run: make test
