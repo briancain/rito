@@ -4,6 +4,7 @@ import (
 	"context"
 
 	api "github.com/briancain/rito/api/v1"
+	"google.golang.org/grpc"
 )
 
 type Config struct {
@@ -28,6 +29,20 @@ func newgrpcServer(config *Config) (srv *grpcServer, err error) {
 	}
 
 	return srv, nil
+}
+
+// NewGRPCServer is the public interface to creating and registering our
+// grpc server
+func NewGRPCServer(config *Config) (*grpc.Server, error) {
+	gsrv := grpc.NewServer()
+	srv, err := newgrpcServer(config)
+	if err != nil {
+		return nil, err
+	}
+
+	// Register the server
+	api.RegisterLogServer(gsrv, srv)
+	return gsrv, nil
 }
 
 func (s *grpcServer) Produce(
