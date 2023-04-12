@@ -6,7 +6,7 @@ name: Go
 on: [push, pull_request]
 
 env:
-  CONFIG_DIR: ~/rito/test/testcerts
+  CONFIG_DIR: /home/runner/work/rito/rito/test/testcerts
 
 jobs:
   test:
