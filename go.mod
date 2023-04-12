@@ -1,4 +1,4 @@
-module github.com/briancain/proglog
+module github.com/briancain/rito
 
 go 1.20
 
