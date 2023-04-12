@@ -5,6 +5,9 @@ name: Go
 
 on: [push, pull_request]
 
+env:
+  CONFIG_DIR: test/testcerts
+
 jobs:
   test:
     runs-on: ubuntu-latest
