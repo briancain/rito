@@ -13,6 +13,12 @@ proto: # Generates the protobufs
 		--go-grpc_opt=paths=source_relative \
 		--proto_path=.
 
+$(CONFIG_PATH)/model.conf:
+	cp test/model.conf $(CONFIG_PATH)/model.conf
+
+$(CONFIG_PATH)/policy.csv:
+	cp test/policy.csv $(CONFIG_PATH)/policy.csv
+
 .PHONY: test
 test: # Build the project
 	@go test -v ./...
