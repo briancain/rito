@@ -37,6 +37,8 @@ jobs:
       run: |
         make init
         cp test/testcerts/* ~/.rito/
+        cp test/model.conf ~/.rito/
+        cp test/policy.csv ~/.rito/
 
     - name: Test # Run the golang tests!
       run: make test
