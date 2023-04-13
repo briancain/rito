@@ -7,6 +7,7 @@ import (
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
@@ -17,6 +18,8 @@ import (
 type Config struct {
 	CommitLog  CommitLog
 	Authorizer Authorizer
+
+	log *zap.Logger
 }
 
 type CommitLog interface {
@@ -80,6 +83,9 @@ func newgrpcServer(config *Config) (srv *grpcServer, err error) {
 // NewGRPCServer is the public interface to creating and registering our
 // grpc server
 func NewGRPCServer(config *Config, opts ...grpc.ServerOption) (*grpc.Server, error) {
+	logger := zap.L().Named("rito-server")
+	config.log = logger
+
 	// Setup grpc auth interceptor
 	opts = append(opts, grpc.StreamInterceptor(
 		grpc_middleware.ChainStreamServer(
