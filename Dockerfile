@@ -1,8 +1,14 @@
-FROM golang:1.19-alpine as BUILD
-WORKDIR /go/src/rito
-COPY . .
-RUN CGO_ENABLED=0 go build -o /go/bin/rito ./cmd/rito
+FROM golang:1.19-alpine
 
-FROM scratch
-COPY --from=build /go/bin/rito /bin/rito
-ENTRYPOINT ["bin/rito"]
+RUN mkdir -p /tmp/rito
+COPY . /tmp/rito
+
+WORKDIR /tmp/rito
+
+# Download Go modules
+RUN go mod download
+
+# Build
+RUN CGO_ENABLED=0 GOOS=linux go build -o ./rito ./cmd/server
+
+ENTRYPOINT ["/rito"]
