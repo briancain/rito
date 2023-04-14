@@ -4,6 +4,10 @@ CONFIG_PATH=${HOME}/.rito/
 build: # Build the project
 	@go build -o bin/ ./...
 
+.PHONY: docker/build
+docker/build: # Build the server into a docker image
+	@docker build -t briancain/rito:0.0.1 . 
+
 .PHONY: proto
 proto: # Generates the protobufs
 	@protoc api/v1/*.proto \
