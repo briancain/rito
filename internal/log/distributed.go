@@ -380,6 +380,7 @@ func (s *StreamLayer) Dial(
 		return nil, err
 	}
 
+	// identify to mux this is a raft rpc
 	_, err = conn.Write([]byte{byte(RaftRPC)})
 	if err != nil {
 		return nil, err
