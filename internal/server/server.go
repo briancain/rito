@@ -24,8 +24,9 @@ import (
 )
 
 type Config struct {
-	CommitLog  CommitLog
-	Authorizer Authorizer
+	CommitLog   CommitLog
+	Authorizer  Authorizer
+	GetServerer GetServerer
 
 	log *zap.Logger
 }
@@ -229,4 +230,24 @@ func (s *grpcServer) ConsumeStream(
 			req.Offset++
 		}
 	}
+}
+
+// GetServers is a metadata endpoint that will let a client know what servers
+// exist inside the distributed cluster via Raft
+func (s *grpcServer) GetServers(
+	ctx context.Context,
+	req *api.GetServersRequest,
+) (*api.GetServersResponse, error) {
+	servers, err := s.GetServerer.GetServers()
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.GetServersResponse{Servers: servers}, nil
+}
+
+// We make this an interface because a non-distributed implementation might not
+// care about implementing a GetServers if there's only 1.
+type GetServerer interface {
+	GetServers() ([]*api.Server, error)
 }
