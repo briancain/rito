@@ -483,3 +483,23 @@ func (l *DistributedLog) Close() error {
 
 	return l.log.Close()
 }
+
+// GetServers will query raft and return a list of identified servers which
+// makes the cluster discoverable
+func (l *DistributedLog) GetServers() ([]*api.Server, error) {
+	future := l.raft.GetConfiguration()
+	if err := future.Error(); err != nil {
+		return nil, err
+	}
+
+	var servers []*api.Server
+	for _, server := range future.Configuration().Servers {
+		servers = append(servers, &api.Server{
+			Id:       string(server.ID),
+			RpcAddr:  string(server.Address),
+			IsLeader: l.raft.Leader() == server.Address,
+		})
+	}
+
+	return servers, nil
+}
