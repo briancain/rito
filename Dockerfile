@@ -9,6 +9,6 @@ WORKDIR /tmp/rito
 RUN go mod download
 
 # Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o ./rito ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux go build -o ./rito ./cmd/rito
 
 ENTRYPOINT ["/rito"]
